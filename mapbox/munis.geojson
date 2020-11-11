@@ -1,0 +1,34 @@
+var munis = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.7845,
+          41.8850
+        ]
+      },
+      "properties": {
+        "city": "Oak Park",
+        "state": "IL",
+        "country": "United States"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          89.0940,
+          42.2711
+        ]
+      },
+      "properties": {
+        "city": "Rockford",
+        "state": "IL",
+        "country": "United States"
+      }
+    }
+  ]

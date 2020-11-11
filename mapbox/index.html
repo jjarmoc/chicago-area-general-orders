@@ -1,0 +1,392 @@
+<html>
+<head>
+	<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
+
+	<style>
+		body {
+		  color: #404040;
+		  font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+		  margin: 0;
+		  padding: 0;
+		  -webkit-font-smoothing: antialiased;
+		}
+
+		* {
+		  -webkit-box-sizing: border-box;
+		  -moz-box-sizing: border-box;
+		  box-sizing: border-box;
+		}
+
+		h1 {
+		  font-size: 22px;
+		  margin: 0;
+		  font-weight: 400;
+		  line-height: 20px;
+		  padding: 20px 2px;
+		}
+
+		a {
+		  color: #404040;
+		  text-decoration: none;
+		}
+
+		a:hover {
+		  color: #101010;
+		}
+
+		.sidebar {
+		  position: absolute;
+		  width: 33.3333%;
+		  height: 100%;
+		  top: 0;
+		  left: 0;
+		  overflow: hidden;
+		  border-right: 1px solid rgba(0, 0, 0, 0.25);
+		}
+
+		.pad2 {
+		  padding: 20px;
+		}
+
+		.map {
+		  position: absolute;
+		  left: 33.3333%;
+		  width: 66.6666%;
+		  top: 0;
+		  bottom: 0;
+		}
+
+		.heading {
+		  background: #fff;
+		  border-bottom: 1px solid #eee;
+		  height: 60px;
+		  line-height: 60px;
+		  padding: 0 10px;
+		}
+
+		.listings {
+		  height: 100%;
+		  overflow: auto;
+		  padding-bottom: 60px;
+		}
+
+		.listings .item {
+		  display: block;
+		  border-bottom: 1px solid #eee;
+		  padding: 10px;
+		  text-decoration: none;
+		}
+
+		.listings .item:last-child { border-bottom: none; }
+
+		.listings .item .title {
+		  display: block;
+		  color: #00853e;
+		  font-weight: 700;
+		}
+
+		.listings .item .title small { font-weight: 400; }
+
+		.listings .item.active .title,
+		.listings .item .title:hover { color: #8cc63f; }
+
+		.listings .item.active {
+		  background-color: #f8f8f8;
+		}
+
+		::-webkit-scrollbar {
+		  width: 3px;
+		  height: 3px;
+		  border-left: 0;
+		  background: rgba(0, 0, 0, 0.1);
+		}
+
+		::-webkit-scrollbar-track {
+		  background: none;
+		}
+
+		::-webkit-scrollbar-thumb {
+		  background: #00853e;
+		  border-radius: 0;
+		}
+
+		.clearfix { display: block; }
+
+		.clearfix::after {
+		  content: '.';
+		  display: block;
+		  height: 0;
+		  clear: both;
+		  visibility: hidden;
+		}
+
+		.marker {
+		  background-image: url('marker.png');
+		  background-size: cover;
+		  width: 50px;
+		  height: 50px;
+		  border-radius: 50%;
+		  cursor: pointer;
+		}
+
+		/* Marker tweaks */
+		.mapboxgl-popup {
+		  padding-bottom: 50px;
+		}
+
+		.mapboxgl-popup-close-button {
+		  display: none;
+		}
+
+		.mapboxgl-popup-content {
+		  font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+		  padding: 0;
+		  width: 180px;
+		}
+
+		.mapboxgl-popup-content-wrapper {
+		  padding: 1%;
+		}
+
+		.mapboxgl-popup-content h3 {
+		  background: #91c949;
+		  color: #fff;
+		  margin: 0;
+		  display: block;
+		  padding: 10px;
+		  border-radius: 3px 3px 0 0;
+		  font-weight: 700;
+		  margin-top: -15px;
+		}
+
+		.mapboxgl-popup-content h4 {
+		  margin: 0;
+		  display: block;
+		  padding: 10px;
+		  font-weight: 400;
+		}
+
+		.mapboxgl-popup-content div {
+		  padding: 10px;
+		}
+
+		.mapboxgl-container .leaflet-marker-icon {
+		  cursor: pointer;
+		}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+		  margin-top: 15px;
+		}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+		  border-bottom-color: #91c949;
+		}
+	</style>	
+
+</head>
+
+
+<body>
+
+	<div class='sidebar'>
+	  <div class='heading'>
+	    <h1>Covered Municipalities</h1>
+	  </div>
+	  <div id='listings' class='listings'></div>
+	</div>
+
+	<div id='map' class='map pad2'>Map</div>
+
+	<script>
+
+	  /* This will let you use the .remove() function later on */
+		if (!('remove' in Element.prototype)) {
+		  Element.prototype.remove = function() {
+		    if (this.parentNode) {
+		      this.parentNode.removeChild(this);
+		    }
+		  };
+		}
+
+	  mapboxgl.accessToken = 'pk.eyJ1Ijoiamphcm1vYyIsImEiOiJja2hkejQwZnAwYTRtMzBzMWExbG01eTR5In0.-R9Ze__LHTumMedo-c3Czw';
+	  
+	  var map = new mapboxgl.Map({
+	    container: 'map',
+	    style: 'mapbox://styles/mapbox/streets-v11',
+	    center: [-87.62, 41.87],
+	    zoom: 7
+	  });
+
+	  var munis = {
+		  "type": "FeatureCollection",
+		  "features": [
+		    {
+		      "type": "Feature",
+		      "geometry": {
+		        "type": "Point",
+		        "coordinates": [
+		          -87.784500,
+		          41.885033
+		        ]
+		      },
+		      "properties": {
+		        "city": "Oak Park",
+		        "state": "IL",
+		        "country": "United States",
+		        "files": ["example1"]
+		      }
+		    },
+		    {
+		      "type": "Feature",
+		      "geometry": {
+		        "type": "Point",
+		        "coordinates": [
+		          -89.064445,
+		          42.259445
+		        ]
+		      },
+		      "properties": {
+		        "city": "Rockford",
+		        "state": "IL",
+		        "country": "United States",
+		        "files": ["example1", "example2"]
+		      }
+		    }
+		  ]
+		}
+
+	  function flyToStore(currentFeature) {
+		  map.flyTo({
+		    center: currentFeature.geometry.coordinates,
+		    zoom: 10
+		  });
+		}
+
+	  function createPopUp(currentFeature) {
+		  var popUps = document.getElementsByClassName('mapboxgl-popup');
+		  /** Check if there is already a popup on the map and if so, remove it */
+		  if (popUps[0]) popUps[0].remove();
+
+		  var popup = new mapboxgl.Popup({ closeOnClick: false })
+		    .setLngLat(currentFeature.geometry.coordinates)
+		    .setHTML('<h3>' + currentFeature.properties.city + '</h3>' +
+		      '<h4>' + currentFeature.properties.files + '</h4>')
+		    .addTo(map);
+		}
+
+	  function buildLocationList(data) {
+		  data.features.forEach(function(muni, i){
+		    /**
+		     * Create a shortcut for `muni.properties`,
+		     * which will be used several times below.
+		    **/
+		    var prop = muni.properties;
+
+		    /* Add a new listing section to the sidebar. */
+		    var listings = document.getElementById('listings');
+		    var listing = listings.appendChild(document.createElement('div'));
+		    /* Assign a unique `id` to the listing. */
+		    listing.id = "listing-" + prop.id;
+		    /* Assign the `item` class to each listing for styling. */
+		    listing.className = 'item';
+
+		    /* Add the link to the individual listing created above. */
+		    var link = listing.appendChild(document.createElement('a'));
+		    link.href = '#';
+		    link.className = 'title';
+		    link.id = "link-" + prop.id;
+		    link.innerHTML = prop.city;
+
+		    link.addEventListener('click', function(e){
+			  for (var i=0; i < data.features.length; i++) {
+			    if (this.id === "link-" + data.features[i].properties.id) {
+			      var clickedListing = data.features[i];
+			      flyToStore(clickedListing);
+			      createPopUp(clickedListing);
+			    }
+			  }  
+			  var activeItem = document.getElementsByClassName('active');
+			  if (activeItem[0]) {
+			    activeItem[0].classList.remove('active');
+			  }
+			  this.parentNode.classList.add('active');
+			});
+
+		    /* Add details to the individual listing. */
+		    var details = listing.appendChild(document.createElement('div'));
+		    details.innerHTML = prop.files;
+		    //if (prop.phone) {
+		    //  details.innerHTML += ' · ' + prop.phoneFormatted;
+		    //}
+		  });
+		}
+
+		function addMarkers() {
+        /* For each feature in the GeoJSON object above: */
+        munis.features.forEach(function(marker) {
+          /* Create a div element for the marker. */
+          var el = document.createElement('div');
+          /* Assign a unique `id` to the marker. */
+          el.id = "marker-" + marker.properties.id;
+          /* Assign the `marker` class to each marker for styling. */
+          el.className = 'marker';
+          
+          /**
+           * Create a marker using the div element
+           * defined above and add it to the map.
+          **/
+          new mapboxgl.Marker(el, { offset: [0, -23] })
+            .setLngLat(marker.geometry.coordinates)
+            .addTo(map);
+
+          /**
+           * Listen to the element and when it is clicked, do three things:
+           * 1. Fly to the point
+           * 2. Close all other popups and display popup for clicked store
+           * 3. Highlight listing in sidebar (and remove highlight for all other listings)
+          **/
+          el.addEventListener('click', function(e){
+            /* Fly to the point */
+            flyToStore(marker);
+            /* Close all other popups and display popup for clicked store */
+            createPopUp(marker);
+            /* Highlight listing in sidebar */
+            var activeItem = document.getElementsByClassName('active');
+            e.stopPropagation();
+            if (activeItem[0]) {
+              activeItem[0].classList.remove('active');
+            }
+            var listing = document.getElementById('listing-' + marker.properties.id);
+            listing.classList.add('active');
+          });
+        });
+      }
+
+	  munis.features.forEach(function(muni, i){
+  		muni.properties.id = i;
+		});
+
+	  map.on('load', function (e) {
+		  /* Add the data to your map as a layer */
+		  map.addLayer({
+		    "id": "municipalities",
+		    //"type": "symbol",
+		    /* Add a GeoJSON source containing place coordinates and information. */
+		    "source": {
+		      "type": "geojson",
+		      "data": munis
+		    },
+		    "layout": {
+		      "icon-image": "restaurant-15",
+		      "icon-allow-overlap": true,
+		    }
+		  });
+		  buildLocationList(munis);
+		  addMarkers();
+		});
+
+
+	</script>
+</body>
