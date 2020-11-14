@@ -1,8 +1,8 @@
 name: generate-files
 on:
-	push:
-	  branches:
-	    - master
+  push:
+    branches:
+      - master
 jobs:
   generate-json:
     runs-on: ubuntu-latest
