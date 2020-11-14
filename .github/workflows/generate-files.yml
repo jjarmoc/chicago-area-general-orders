@@ -11,15 +11,15 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.7.2'
-      - name: Install gems
-      run: gem install geocoder
+      - name: Install required gem
+        run: gem install geocoder
       - name: Run JSON Generator
-      run: ruby generateJSON.rb
+        run: ruby generateJSON.rb
       - name: Commit and push if it changed
-      run: |-
-        git config user.name "Automated"
-        git config user.email "actions@users.noreply.github.com"
-        git add -A
-        timestamp=$(date -u)
-        git commit -m "Regenerate municipalities.json" || exit 0
-        git push
+        run: |-
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Regenerate municipalities.json" || exit 0
+          git push
