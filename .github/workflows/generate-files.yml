@@ -1,21 +1,21 @@
 name: generate-files
 on:
 	push:
-		branches:
-		  - master
+	  branches:
+	    - master
 jobs:
   generate-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
- 		 with:
-   			ruby-version: '2.7.2'
-	  - name: Install gems
-	  run: gem install geocoder
-	  - name: Run JSON Generator
-	  run: ruby generateJSON.rb
-	  - name: Commit and push if it changed
+        with:
+          ruby-version: '2.7.2'
+      - name: Install gems
+      run: gem install geocoder
+      - name: Run JSON Generator
+      run: ruby generateJSON.rb
+      - name: Commit and push if it changed
       run: |-
         git config user.name "Automated"
         git config user.email "actions@users.noreply.github.com"
