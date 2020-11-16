@@ -23,10 +23,10 @@
         <title>Chicago Area - Police General Orders</title>
     </head>
  
-    <body onload=load() style="height: 100vh">
+    <body onload=load()>
 	
-        <div class="vh-100 d-flex flex-column">
-            <div class="row flex-shrink-0" style="height:12vh;">
+        <div class="vh-100">
+            <div class="row">
                 <div class="col-12">
                     <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
                       <a class="navbar-brand" href="#">Chicago Area General Orders</a>
@@ -42,19 +42,19 @@
                 </div>
             </div>
 
-            <div class="row flex-grow-1">
-                <div class="col-3 overflow-auto">
+            <div class="row">
+                <div class="col-3">
+                    <div id="map" class="map"></div> 
                     <div class="form-group">
-                        <select class="selectpicker muniSelect" data-header="Select a municipality" title="Select a municipality" onchange="muniChange()" id="muniSelect" data-width="100%">
-                        </select>
+                        <select class="muniSelect" data-header="Select a municipality" title="Select a municipality" onchange="muniChange()" id="muniSelect" data-width="100%"></select>
+                        <ul class="list-group" id="filelist"></ul>
                     </div>
-                    <ul class="list-group" id="filelist" style="overflow-y: scroll; height:45vh;"></ul>
-                    <div id="map" class="map" style="height:45vh;"></div> 
                 </div>
 
-                <div class="col-9 embed-responsive embed-responsive-1by1" style="height:90vh;">
-                    <iframe class="embed-responsive-item" name="fileview" src="welcome.html">
-                    </iframe>
+                <div class="col-9">
+                    <div class="embed-responsive embed-responsive-1by1">
+                            <iframe class="embed-responsive-item" name="fileview" src="welcome.html"></iframe>
+                    </div>
                 </div>
             </div>
         </div>
