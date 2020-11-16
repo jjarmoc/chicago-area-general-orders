@@ -64,7 +64,8 @@
 
             function flyTo(coords){
                 map.flyTo({center: coords,
-                    essential: true // this animation is considered essential with respect to prefers-reduced-motion
+                    essential: true,
+                    zoom:10 
                     });
             }
             function muniChange() {
