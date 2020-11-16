@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+        <script src="https://kit.fontawesome.com/32057e9a9f.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+        <style>
+        .navbar {
+          background: url(flag.svg) no-repeat top left;
+          background-size: contain;
+          padding-left: 100px;
+        }
+        </style>
+
+        <title>Chicago Area - Police General Orders</title>
+    </head>
+ 
+    <body onload=load() style="height: 100vh">
+	
+        <div class="vh-100 d-flex flex-column">
+            <div class="row flex-shrink-0" style="height:12vh;">
+                <div class="col-12">
+                    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+                      <a class="navbar-brand" href="#">Chicago Area General Orders</a>
+                      <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/jjarmoc/chicago-area-general-orders">
+                                <i class="fa fa-github"></i>
+                                GitHub
+                            </a>
+                        </li>
+                      </ul>  
+                    </nav>
+
+                    <div class="form-group">
+                        <select class="selectpicker muniSelect" data-header="Select a municipality" title="Select a municipality" onchange="muniChange()" id="muniSelect" data-width="100%">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row flex-grow-1">
+                <div class="col-3 overflow-auto">
+                    <ul class="list-group" id="filelist" style="overflow-y: scroll; height:45vh;"></ul>
+                    <div id="map" class="map" style="height:45vh;"></div> 
+                </div>
+
+                <div class="col-9 embed-responsive embed-responsive-1by1" style="height:90vh;">
+                    <iframe class="embed-responsive-item" name="fileview" src="welcome.html">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            function flyTo(coords){
+                map.flyTo({center: coords,
+                    essential: true // this animation is considered essential with respect to prefers-reduced-motion
+                    });
+            }
+            function muniChange() {
+                console.log("Changed Selection");
+                var muni=munis[document.getElementById("muniSelect").selectedIndex-1]
+                flyTo(muni.coords);
+                
+                var filelist=document.getElementById("filelist");
+                filelist.innerHTML = "";
+                for (var i=0; i<=muni.files.length-1; i++){
+                    var li = document.createElement('li');
+                    li.className="list-group-item";
+
+                    var file = muni.files[i];
+                    var filename = file.split("/")[file.split("/").length-1];
+                    li.innerHTML = "<i class=\"far fa-file-pdf\"></i> <a href=\"" + file + "\" target=\"fileview\" title=\"" + filename + "\">" + filename + "</a>";
+                    filelist.appendChild(li);
+                }
+            }
+
+            function addMunis(munis) {
+                var muniselect = document.getElementById("muniSelect");
+                for (var i=0; i<munis.length-1; i++){
+                    var opt = document.createElement('option');
+                    opt.value = i;
+                    opt.id = i;
+                    munis[i].id = i;
+                    opt.innerHTML = munis[i].city;
+                    muniselect.appendChild(opt);
+                }
+            
+                  $('.muniSelect').selectpicker('refresh');
+            }
+
+            function load(){
+                console.log("Loading");
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                       munis = JSON.parse(xhttp.responseText);
+                       addMunis(munis);
+                    }
+                };
+                xhttp.open("GET", "municipalities.json", true);
+                xhttp.send();
+
+                mapboxgl.accessToken = 'pk.eyJ1Ijoiamphcm1vYyIsImEiOiJja2hkejQwZnAwYTRtMzBzMWExbG01eTR5In0.-R9Ze__LHTumMedo-c3Czw';
+          
+                map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [-87.62, 41.87],
+                    zoom: 7
+                  });
+            }
+
+        </script>
+    </body>
+</html>
