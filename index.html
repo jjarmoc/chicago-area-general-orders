@@ -82,6 +82,9 @@
             function selectMuni(index) {
                 var muni = munis[index];
                 console.log("Selected: " + muni.city);
+
+                var header = document.getElementById("muniSelectHeader");
+                header.innerHTML = muni.city;
                 flyTo(muni.coords);
                 
                 var filelist=document.getElementById("filelist");
