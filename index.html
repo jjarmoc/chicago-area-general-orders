@@ -89,11 +89,11 @@
                 
                 var filelist=document.getElementById("filelist");
                 filelist.innerHTML = "";
-                for (var i=0; i<=muni.files.length-1; i++){
+                for (var i=0; i<=muni.pdfs.length-1; i++){
                     var li = document.createElement('li');
                     li.className="list-group-item";
 
-                    var file = muni.files[i];
+                    var file = muni.pdfs[i];
                     var filename = file.split("/")[file.split("/").length-1];
                     li.innerHTML = "<i class=\"far fa-file-pdf\"></i> <a href=\"" + file + "\" target=\"fileview\" title=\"" + filename + "\">" + filename + "</a>";
                     filelist.appendChild(li);
