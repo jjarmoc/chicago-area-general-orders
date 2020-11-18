@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 require 'json'
 require 'geocoder'
 
@@ -9,6 +8,7 @@ class Municipality
 		@state, @city = @path.split("/")
 		@latitude, @longitude = Geocoder.search(self.address).first.coordinates
 		@pdfs = Dir.glob(@path + "/*.pdf")
+		@links = Dir.glob(@path + "/links.json").map{|j| JSON.parse(File.read(j))["links"]}.flatten
 	end
 
 	def address
@@ -27,7 +27,8 @@ class Municipality
             state: @state,
             path: @path,
             coords: [@longitude, @latitude],
-            pdfs: @pdfs
+            pdfs: @pdfs,
+            links: @links
         }
     end
 
