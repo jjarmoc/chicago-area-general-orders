@@ -8,7 +8,7 @@ class Municipality
 		@path = path
 		@state, @city = @path.split("/")
 		@latitude, @longitude = Geocoder.search(self.address).first.coordinates
-		@pdfs = Dir.glob(@path + "/*")
+		@pdfs = Dir.glob(@path + "/*.pdf")
 	end
 
 	def address
