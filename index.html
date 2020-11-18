@@ -57,7 +57,7 @@
                         </button>
 
                         <div class="row">
-                            <ul class="list-group" id="filelist"></ul>
+                            <ul class="list-group" id="records"></ul>
                         </div>
                     </div>
                 </div>
@@ -87,8 +87,20 @@
                 header.innerHTML = muni.city;
                 flyTo(muni.coords);
                 
-                var filelist=document.getElementById("filelist");
-                filelist.innerHTML = "";
+                var records=document.getElementById("records");
+                records.innerHTML = "";
+
+                // First we add off-site links
+                for (var i=0; i<=muni.links.length-1; i++){
+                    var li = document.createElement('li');
+                    li.className="list-group-item";
+
+                    var link = muni.links[i];
+                    li.innerHTML = "<i class=\"fa fa-link\"></i> <a href=\"" + link.url + "\" target=\"fileview\" title=\"" + link.description + "\">" + link.description + "</a>";
+                    records.appendChild(li);
+                }
+
+                // Next we add local PDFs
                 for (var i=0; i<=muni.pdfs.length-1; i++){
                     var li = document.createElement('li');
                     li.className="list-group-item";
@@ -96,7 +108,7 @@
                     var file = muni.pdfs[i];
                     var filename = file.split("/")[file.split("/").length-1];
                     li.innerHTML = "<i class=\"far fa-file-pdf\"></i> <a href=\"" + file + "\" target=\"fileview\" title=\"" + filename + "\">" + filename + "</a>";
-                    filelist.appendChild(li);
+                    records.appendChild(li);
                 }
             }
 
