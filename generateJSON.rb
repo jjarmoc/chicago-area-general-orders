@@ -7,7 +7,7 @@ class Municipality
 		@path = path
 		@state, @city = @path.split("/")
 		@latitude, @longitude = Geocoder.search(self.address).first.coordinates
-		@pdfs = Dir.glob(@path + "/*.pdf")
+		@pdfs = Dir.glob(@path + "/*.pdf").sort
 		@links = Dir.glob(@path + "/links.json").map{|j| JSON.parse(File.read(j))["links"]}.flatten
 	end
 
