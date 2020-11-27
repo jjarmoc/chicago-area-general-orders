@@ -15,7 +15,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Chicago Area Police General Orders">
   <meta name="author" content="Jeff Jarmoc">
-  <link rel="icon" type="image/svg+xml" href="/assets/flag.svg"/>
+  <link rel="icon" type="image/svg+xml" href="assets/flag.svg"/>
 
   <title>Chicago Area General Orders</title>
 
@@ -147,7 +147,7 @@
                 $.each(muni.pdfs, function( i ) {
                   let pdf = muni.pdfs[i];
                   let filename = pdf.split("/")[pdf.split("/").length-1];
-                  $("#results").append('<div class="list-group-item list-group-item-action bg-light"><i class="fa fa-file-pdf fa-3x"></i><a href="'+pdf+'" target="fileview" onclick="toggle()" title="'+filename+'"> '+filename+"</a></div>");
+                  $("#results").append('<div class="list-group-item list-group-item-action bg-light"><i class="fa fa-file-pdf fa-3x"></i><a href="https://docs.google.com/viewerng/viewer?embedded=true&url=https://jjarmoc.github.io/chicago-area-general-orders/'+pdf+'" target="fileview" onclick="toggle()" title="'+filename+'"> '+filename+"</a></div>");
                 });
 
               };
