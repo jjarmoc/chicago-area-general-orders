@@ -11,11 +11,12 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.7.2'
-      - name: Install required gems
+      - name: Install required 'geocoder' gem
         run: gem install geocoder
-        run: gem install git
       - name: Run JSON Generator
         run: ruby generateJSON.rb
+      - name: Install required 'git' gem
+        run: gem install git
       - name: Run Sitemap Generator
         run: ruby generateSitemap.rb
       - name: Commit and push if it changed
