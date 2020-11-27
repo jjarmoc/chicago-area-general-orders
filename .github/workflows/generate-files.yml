@@ -4,17 +4,20 @@ on:
     branches:
       - master
 jobs:
-  generate-json:
+  generate-files:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.7.2'
-      - name: Install required gem
+      - name: Install required gems
         run: gem install geocoder
+        run: gem install git
       - name: Run JSON Generator
         run: ruby generateJSON.rb
+      - name: Run Sitemap Generator
+        run: ruby generateSitemap.rb
       - name: Commit and push if it changed
         run: |-
           git config user.name "Automated"
