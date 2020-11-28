@@ -128,7 +128,7 @@
     function flyTo(coords){
                 map.flyTo({center: coords,
                     essential: true,
-                    zoom:10 
+                    zoom:9
                     });
             }
 
@@ -154,9 +154,20 @@
 
     function addMunis(munis) {
                 $.each( munis, function( key, value ) {
-                  // console.log( key + ": " + value.city );
+                  // Add muni to select dropdown
                   $("#muniSelect").append('<a class="dropdown-item" href="#" onclick="selectMuni('+key+')">' + value.city +'</a>');
+                  // Add marker to map
+                  var marker = new mapboxgl.Marker()
+                    .setLngLat(value.coords)
+                    .addTo(map);
+                  // Make the marker clickable
+                  marker.getElement().addEventListener('click', () => {
+                    selectMuni(key);
+                  });
+
                 });
+
+              
               }
 
     function load(){
@@ -176,7 +187,7 @@
                     container: 'map',
                     style: 'mapbox://styles/mapbox/streets-v11',
                     center: [-87.62, 41.87],
-                    zoom: 7
+                    zoom: 8
                   });
             }
   </script>
