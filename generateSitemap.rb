@@ -54,6 +54,7 @@ class Sitemap::Resource
 		uri = URI.parse(BASE_URL)
 		# split the @path, encode components and append to uri.path
 		path, filename = File.split(@path)
+		path = '' if path = '.'
 		uri.path = uri.path + path.split("/").map{ |x| URI.encode_www_form_component(x)}.append(URI.encode_www_form_component(filename)).join("/") 
 		# Return the resulting URI as a string
 		uri.to_s
